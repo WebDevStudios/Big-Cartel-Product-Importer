@@ -162,7 +162,7 @@ class WDS_BC_Importer {
 	 * Add our menu items.
 	 */
 	public function admin_menu() {
-		add_options_page( 'Big Cartel Importer', 'Big Cartel Importer', 'administrator', __FILE__, array( &$this, 'admin_page' ) );
+		add_options_page( 'Big Cartel Importer', 'Big Cartel Importer', 'administrator', __FILE__, array( $this, 'admin_page' ) );
 	}
 
 	/**
