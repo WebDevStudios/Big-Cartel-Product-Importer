@@ -460,11 +460,7 @@ class WDS_BC_Importer {
 	 * Add the meta box.
 	 */
 	public function add_meta_box() {
-
-		// print_r( $this );
-
-		add_meta_box( $this->metabox_settings['id'], $this->metabox_settings['title'], array( &$this, 'metabox_fields' ), $this->metabox_settings['page'], $this->metabox_settings['context'], $this->metabox_settings['priority'] );
-
+		add_meta_box( $this->metabox_settings['id'], $this->metabox_settings['title'], array( $this, 'metabox_fields' ), $this->metabox_settings['page'], $this->metabox_settings['context'], $this->metabox_settings['priority'] );
 	}
 
 	/**
