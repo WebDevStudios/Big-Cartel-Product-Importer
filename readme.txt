@@ -1,11 +1,13 @@
 === Big Cartel Product Importer ===
-Contributors: coreymcollins, rzen, webdevstudios
+Contributors: coreymcollins, webdevstudios, pluginize
 Plugin Name: Big Cartel Product Importer
 Plugin URI: http://www.webdevstudios.com
 Tags: bigcartel, store, shop, import, importer
 Author: WebDevStudios
 Author URI: http://www.webdevstudios.com
+Requires at least: 4.2
 Tested up to: 4.6
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
