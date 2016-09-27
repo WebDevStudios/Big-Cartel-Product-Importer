@@ -494,33 +494,30 @@ class WDS_BC_Importer {
 	 */
 	public function save_post( $post_id ) {
 
-		// verify nonce
-		if ( !isset($_POST['big_cartel_importer_nonce']) || !wp_verify_nonce($_POST['big_cartel_importer_nonce'], basename(__FILE__))) {
-			return $post_id;
+		if ( ! isset( $_POST['big_cartel_importer_nonce'] ) || ! wp_verify_nonce( $_POST['big_cartel_importer_nonce'], basename( __FILE__ ) ) ) {
+			return;
 		}
 
-		// check autosave
-		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-			return $post_id;
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
 		}
 
-		// check permissions
-		if ('page' == $_POST['post_type']) {
-			if (!current_user_can('edit_page', $post_id)) {
-				return $post_id;
+		if ( 'page' == $_POST['post_type'] ) {
+			if ( ! current_user_can( 'edit_page', $post_id ) ) {
+				return;
 			}
-		} elseif (!current_user_can('edit_post', $post_id)) {
-			return $post_id;
+		} elseif ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
 		}
 
-		foreach ($video_meta_box['fields'] as $field) {
-			$old = get_post_meta($post_id, $field['id'], true);
-			$new = $_POST[$field['id']];
+		foreach ( $this->metabox_settings['fields'] as $field ) {
+			$old = get_post_meta( $post_id, $field['id'], true );
+			$new = $_POST[ $field['id'] ];
 
-			if ($new && $new != $old) {
-				update_post_meta($post_id, $field['id'], $new);
-			} elseif ('' == $new && $old) {
-				delete_post_meta($post_id, $field['id'], $old);
+			if ( $new && $new != $old ) {
+				update_post_meta( $post_id, $field['id'], $new );
+			} elseif ( '' == $new && $old ) {
+				delete_post_meta( $post_id, $field['id'], $old );
 			}
 		}
 	}
