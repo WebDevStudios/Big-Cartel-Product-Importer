@@ -30,6 +30,9 @@ After struggling to find a solution to the problem of importing BigCartel produc
 
 == Changelog ==
 
+= 1.0.2 =
+* Code cleanup and modernization for WordPress compatibility and different server setups.
+
 = 1.0.1 =
 Fix an issue with checking for maintenance mode when pulling posts in.
 
