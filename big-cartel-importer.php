@@ -12,10 +12,10 @@ License: GPLv2
 /**
  * Enqueue some styles.
  */
-add_action( 'init', 'big_cartel_importer_styles' );
 function big_cartel_importer_styles() {
 	wp_enqueue_style( 'big_cartel_settings_styles', plugins_url( '/big-cartel-importer/css/big-cartel-styles.css', dirname( __FILE__ ) ) );
 }
+add_action( 'init', 'big_cartel_importer_styles' );
 
 /**
  * Class WDS_BC_Importer
