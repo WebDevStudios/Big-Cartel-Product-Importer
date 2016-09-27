@@ -233,8 +233,8 @@ class WDS_BC_Importer {
 	public function admin_page() { ?>
 		<div id="theme-options-wrap">
 			<div class="icon32" id="icon-tools"></div>
-			<h2><?php _e( 'Big Cartel Importer Options', 'wdsbc' ); ?></h2>
-			<p><?php _e( 'Set the URL of your Big Cartel store to pull in your products.', 'wdsbc' ); ?></p>
+			<h2><?php esc_html_e( 'Big Cartel Importer Options', 'wdsbc' ); ?></h2>
+			<p><?php esc_html_e( 'Set the URL of your Big Cartel store to pull in your products.', 'wdsbc' ); ?></p>
 			<form id="options-form" method="post" action="options.php" enctype="multipart/form-data">
 				<?php settings_fields( 'big_cartel_importer_plugin_options' ); ?>
 				<?php do_settings_sections(__FILE__); ?>
