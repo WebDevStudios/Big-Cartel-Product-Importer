@@ -3,7 +3,7 @@
 Plugin Name: Big Cartel Product Importer
 Plugin URI: http://www.webdevstudios.com
 Description: Import your products from Big Cartel to a Product custom post type in WordPress.
-Version: 1.0.1
+Version: 1.0.2
 Author: WebDevStudios
 Author URI: http://www.webdevstudios.com
 License: GPLv2
