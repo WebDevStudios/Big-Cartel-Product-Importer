@@ -40,13 +40,15 @@ class WDS_BC_Importer {
 		$this->options    = get_option( 'big_cartel_importer_plugin_options' );
 		$this->store_name = ( isset( $this->options['store_name'] ) ) ? esc_html( $this->options['store_name'] ) : '';
 
-		// Set a URL to check if the store is in maintenance mode
-		$maintenance      = @file_get_contents( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		if ( ! empty( $this->store_name ) ) {
+			// Set a URL to check if the store is in maintenance mode.
+			$maintenance = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		}
 
-		// If status is OK, proceed
-		if ( ! empty( $maintenance ) )
-			$this->bc_object 	= ( ! empty( $this->store_name ) ) ? json_decode( file_get_contents( 'http://api.bigcartel.com/'.$this->store_name.'/products.js' ) ) : '';
-		else $this->bc_object 	= null;
+		// If status is OK, proceed.
+		if ( ! empty ( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
+			$this->bc_object = ( ! empty( $this->store_name ) ) ? json_decode( file_get_contents( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' ) ) : '';
+		}
 
 		$this->metabox_settings = array(
 			'id'       => 'big-cartel-metabox',
@@ -183,17 +185,33 @@ class WDS_BC_Importer {
 		// Get the total term count.
 		$count_terms = wp_count_terms( 'product-categories' );
 
-		// Set a URL to check if the store is in maintenance mode
-		$maintenance = @file_get_contents( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		if ( ! empty( $this->store_name ) ) {
+			// Set a URL to check if the store is in maintenance mode.
+			$maintenance = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		}
 
 		$options = get_option( 'big_cartel_importer_plugin_options' );
 		echo "<div class='input-wrap'><div class='left'><input name='big_cartel_importer_plugin_options[store_name]' type='text' value='{$options['store_name']}' /></div>
 		<div class='right'>If your store URL is: http://<strong>yourstorename</strong>.bigcartel.com, enter <strong>yourstorename</strong> in the text field.</div>";
 
-		if ( empty( $maintenance ) )
-			echo "<span>Your store is currently in maintenance mode and can not have its products imported.</span></div>";
-		else
-			echo "<span>You have imported <strong>". $total_posts ."</strong> products in <strong>". $count_terms ."</strong> categories.</span></div>";
+		if ( is_wp_error( $maintenance ) || 200 !== wp_remote_retrieve_response_code( $maintenance ) ) {
+			printf(
+				'<span>%s</span></div>',
+				esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'wdsbc' )
+			);
+		} else {
+			printf(
+				'<span>%s</span></div>',
+				sprintf(
+					esc_html__(
+						'You have imported %s products in %s categories.',
+						'wdsbc'
+					),
+					'<strong>' . $total_posts . '</strong>',
+					'<strong>' . $count_terms . '</strong>'
+				)
+			);
+		}
 	}
 
 	/**
@@ -406,17 +424,28 @@ class WDS_BC_Importer {
 	 */
 	public function process_settings_save() {
 
-		// Set a URL to check if the store is in maintenance mode
-		$maintenance = @file_get_contents( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		if ( empty( $_POST ) ) {
+			return;
+		}
 
-		// If status is OK, proceed
-		if ( !empty ( $maintenance ) ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
 
-			if ( isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) && !empty( $_POST['big_cartel_importer_plugin_options']['store_name'] ) ) {
+		if ( ! empty( $this->store_name ) ) {
+			// Set a URL to check if the store is in maintenance mode.
+			$maintenance = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		}
 
-				// Update our class variables
+		// If status is OK, proceed.
+		if ( ! empty ( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
+
+			if ( isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) && ! empty( $_POST['big_cartel_importer_plugin_options']['store_name'] ) ) {
+
+				// Update our class variables.
 				$this->store_name = $_POST['big_cartel_importer_plugin_options']['store_name'];
-				$this->bc_object  = json_decode( @file_get_contents( 'http://api.bigcartel.com/'.$this->store_name.'/products.js' ) );
+				$response = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+				$this->bc_object  = json_decode( wp_remote_retrieve_body( $response ) );
 
 				// Add our terms and import our products.
 				$this->add_terms();
