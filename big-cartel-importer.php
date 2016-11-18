@@ -263,7 +263,7 @@ class WDS_BC_Importer {
 			<form id="options-form" method="post" action="options.php" enctype="multipart/form-data">
 				<?php settings_fields( 'big_cartel_importer_plugin_options' ); ?>
 				<?php do_settings_sections( 'big-cartel-importer' ); ?>
-				<p class="submit"><input name="submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Run Import', 'wdsbc' ); ?>" /></p>
+				<p class="submit"><input name="submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save and run import', 'wdsbc' ); ?>" /></p>
 			</form>
 		</div>
 	<?php
