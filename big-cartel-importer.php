@@ -22,6 +22,12 @@ add_action( 'init', 'big_cartel_importer_styles' );
  */
 class WDS_BC_Importer {
 
+	public $pluing_dir_path = '';
+
+	public $options = array();
+
+	public $store_name = '';
+
 	/**
 	 * BigCartel object.
 	 *
