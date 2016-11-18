@@ -46,8 +46,10 @@ class WDS_BC_Importer {
 		}
 
 		// If status is OK, proceed.
-		if ( ! empty ( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
-			$this->bc_object = ( ! empty( $this->store_name ) ) ? json_decode( file_get_contents( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' ) ) : '';
+		if ( ! empty( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
+			$this->bc_object = (
+				! empty( $this->store_name )
+			) ? json_decode( wp_remote_retrieve_body( $maintenance ) ) : '';
 		}
 
 		$this->metabox_settings = array(
