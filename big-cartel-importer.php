@@ -62,33 +62,33 @@ class WDS_BC_Importer {
 					'desc' => 'Big Cartel product ID number.',
 					'id'   => 'big_cartel_importer_id',
 					'type' => 'text',
-					'std'  => ''
+					'std'  => '',
 				),
 				array(
 					'name' => 'Price',
 					'desc' => 'Enter the price of the product without a dollar sign.',
 					'id'   => 'big_cartel_importer_price',
 					'type' => 'text',
-					'std'  => ''
+					'std'  => '',
 				),
 				array(
 					'name' => 'Big Cartel URL',
 					'desc' => 'The URL for the product in your Big Cartel store.',
 					'id'   => 'big_cartel_importer_link',
 					'type' => 'text',
-					'std'  => ''
-				)
-			)
+					'std'  => '',
+				),
+			),
 		);
 
 		// Hook in all our necessary functions.
-		add_action( 'init', array( &$this, 'register_post_types' ) );
-		add_action( 'init', array( &$this, 'register_taxonomies' ) );
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_init', array( &$this, 'register_admin_settings' ) );
-		add_action( 'admin_init', array( &$this, 'process_settings_save') );
-		add_action( 'admin_menu', array( &$this, 'add_meta_box' ) );
-		add_action( 'save_post', array( &$this, 'save_post' ) );
+		add_action( 'init', array( $this, 'register_post_types' ) );
+		add_action( 'init', array( $this, 'register_taxonomies' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'register_admin_settings' ) );
+		add_action( 'admin_init', array( $this, 'process_settings_save' ) );
+		add_action( 'admin_menu', array( $this, 'add_meta_box' ) );
+		add_action( 'save_post', array( $this, 'save_post' ) );
 	}
 
 	/**
@@ -109,8 +109,7 @@ class WDS_BC_Importer {
 				'search_items'       => 'Search Products',
 				'not_found'          => 'No Products found',
 				'not_found_in_trash' => 'No Products found in Trash',
-				'parent_item_colon'  => '',
-				'menu_name'          => 'Products'
+				'menu_name'          => 'Products',
 			  ),
 			'hierarchical'       => false,
 			'public'             => true,
@@ -121,8 +120,7 @@ class WDS_BC_Importer {
 			'rewrite'            => array( 'slug' => 'products' ),
 			'capability_type'    => 'post',
 			'has_archive'        => true,
-			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail' )
+			'supports'           => array( 'title', 'editor', 'thumbnail' ),
 		) );
 	}
 
@@ -138,15 +136,13 @@ class WDS_BC_Importer {
 				'search_items'               => __( 'Search Product Categories' ),
 				'popular_items'              => __( 'Common Product Categories' ),
 				'all_items'                  => __( 'All Product Categories' ),
-				'parent_item'                => null,
-				'parent_item_colon'          => null,
 				'edit_item'                  => __( 'Edit Product Category' ),
 				'update_item'                => __( 'Update Product Category' ),
 				'add_new_item'               => __( 'Add New Product Category' ),
-				'new_item_name'              => __( 'New Product Category' .' Name' ),
+				'new_item_name'              => __( 'New Product Category Name' ),
 				'separate_items_with_commas' => __( 'Separate Product Categories with commas' ),
 				'add_or_remove_items'        => __( 'Add or remove Product Categories' ),
-				'choose_from_most_used'      => __( 'Choose from the most used Product Categories' )
+				'choose_from_most_used'      => __( 'Choose from the most used Product Categories' ),
 			),
 			'hierarchical'      => true,
 			'show_ui'           => true,
@@ -191,27 +187,36 @@ class WDS_BC_Importer {
 		}
 
 		$options = get_option( 'big_cartel_importer_plugin_options' );
-		echo "<div class='input-wrap'><div class='left'><input name='big_cartel_importer_plugin_options[store_name]' type='text' value='{$options['store_name']}' /></div>
-		<div class='right'>If your store URL is: http://<strong>yourstorename</strong>.bigcartel.com, enter <strong>yourstorename</strong> in the text field.</div>";
-
-		if ( is_wp_error( $maintenance ) || 200 !== wp_remote_retrieve_response_code( $maintenance ) ) {
-			printf(
-				'<span>%s</span></div>',
-				esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'wdsbc' )
-			);
-		} else {
-			printf(
-				'<span>%s</span></div>',
-				sprintf(
-					esc_html__(
-						'You have imported %s products in %s categories.',
-						'wdsbc'
-					),
-					'<strong>' . $total_posts . '</strong>',
-					'<strong>' . $count_terms . '</strong>'
-				)
-			);
-		}
+		?>
+		<div class="input-wrap">
+			<div class="left">
+				<input name="big_cartel_importer_plugin_options[store_name]" style="width:30%;" type="text" value="<?php esc_attr_e( $options['store_name'] ); ?>" />
+			</div>
+			<div class='right'>
+				<?php
+				printf(
+					esc_html__( 'If your store URL is: %s, enter %s in the text field.', 'wdsbc' ),
+					'http://<strong>yourstorename</strong>.bigcartel.com',
+					'<strong>yourstorename</strong>'
+				);
+				?>
+			</div>
+			<?php
+			if ( is_wp_error( $maintenance ) || 200 !== wp_remote_retrieve_response_code( $maintenance ) ) {
+				printf(
+					'<span>%s</span></div>',
+					esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'wdsbc' )
+				);
+			} else {
+				printf(
+					'<span>%s</span></div>',
+					sprintf(
+						esc_html__( 'You have imported %s products in %s categories.', 'wdsbc' ),
+						'<strong>' . esc_html( $total_posts ) . '</strong>',
+						'<strong>' . esc_html( $count_terms ) . '</strong>'
+					)
+				);
+			}
 	}
 
 	/**
@@ -231,7 +236,8 @@ class WDS_BC_Importer {
 	/**
 	 * Build the admin page.
 	 */
-	public function admin_page() { ?>
+	public function admin_page() {
+	?>
 		<div id="theme-options-wrap">
 			<div class="icon32" id="icon-tools"></div>
 			<h2><?php esc_html_e( 'Big Cartel Importer Options', 'wdsbc' ); ?></h2>
@@ -242,7 +248,8 @@ class WDS_BC_Importer {
 				<p class="submit"><input name="submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Run Import', 'wdsbc' ); ?>" /></p>
 			</form>
 		</div>
-	<?php }
+	<?php
+	}
 
 	/**
 	 * Output the post data and create our posts.
@@ -252,29 +259,40 @@ class WDS_BC_Importer {
 		// Grab the JSON feed as an array.
 		if ( isset( $this->bc_object ) && ! empty( $this->bc_object ) ) {
 			// Get our store name.
-			$this->store_name = $_POST['big_cartel_importer_plugin_options']['store_name'];
+			$this->store_name = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
 
 			$options = get_option( 'big_cartel_importer_plugin_options' );
-			foreach( $this->bc_object as $item ) {
+			foreach ( $this->bc_object as $item ) {
 
 				// Get the post status.
-				$product_status = $item->status;
-				$product_status != 'sold-out' ? $product_post_status = 'publish' : $product_post_status = 'private';
+				$product_status = ( 'sold-out' === $item->status ) ? 'private' : 'publish';
 
 				// Format the date so we can set the post date as the product creation date.
 				$product_publish_date = date( 'Y-m-d H:i:s', strtotime( $item->created_at ) );
 
 				// Set some other variables in place.
-				if ( isset( $item->id ) ) $product_id = intval( $item->id );
-				if ( isset( $item->name ) ) $product_name = esc_html( $item->name );
-				if ( isset( $item->description ) ) $product_description = wp_kses_post( $item->description );
-				if ( isset( $item->price ) ) $product_price = intval( $item->price );
-				if ( isset( $item->permalink ) ) $product_link = esc_url( 'http://'. $this->store_name .'.bigcartel.com/product/'. $item->permalink );
-				if ( isset( $item->images[0]->url ) ) $product_image = esc_url( $item->images[0]->url );
+				if ( isset( $item->id ) ) {
+					$product_id = intval( $item->id );
+				}
+				if ( isset( $item->name ) ) {
+					$product_name = esc_html( $item->name );
+				}
+				if ( isset( $item->description ) ) {
+					$product_description = wp_kses_post( $item->description );
+				}
+				if ( isset( $item->price ) ) {
+					$product_price = intval( $item->price );
+				}
+				if ( isset( $item->permalink ) ) {
+					$product_link = esc_url( 'http://'. $this->store_name .'.bigcartel.com/product/'. $item->permalink );
+				}
+				if ( isset( $item->images[0]->url ) ) {
+					$product_image = esc_url( $item->images[0]->url );
+				}
 
 				// Get the category list.
 				$product_category_list = array();
-				foreach( $item->categories as $item_category ) {
+				foreach ( $item->categories as $item_category ) {
 					// Build the array of attached product categories from BC.
 					$product_category_list[] = $item_category->name;
 					$category_name = $item_category->name;
@@ -285,11 +303,11 @@ class WDS_BC_Importer {
 				$my_post = array(
 					'post_title'   => $product_name,
 					'post_content' => $product_description,
-					'post_status'  => $product_post_status,
+					'post_status'  => $product_status,
 					'post_author'  => 1,
 					'post_date'    => $product_publish_date,
 					'post_type'    => 'bc_import_products',
-					'tax_input'    => array( 'product-categories' => array( $product_categories ) )
+					'tax_input'    => array( 'product-categories' => array( $product_categories ) ),
 				);
 
 				if ( ! get_page_by_title( $my_post['post_title'], 'OBJECT', 'bc_import_products' ) ) {
@@ -299,7 +317,7 @@ class WDS_BC_Importer {
 
 					// Get the list of categories attached to a product.
 					$terms = array();
-					foreach( $item->categories as $item_category ) {
+					foreach ( $item->categories as $item_category ) {
 						$terms[] = $item_category->name;
 					}
 
@@ -317,10 +335,10 @@ class WDS_BC_Importer {
 						$image_data = file_get_contents( $image_url );
 						$filename   = basename( $image_url );
 
-						if( wp_mkdir_p( $upload_dir['path'] ) )
+						$file = $upload_dir['basedir'] . '/' . $filename;
+						if ( wp_mkdir_p( $upload_dir['path'] ) ) {
 						    $file = $upload_dir['path'] . '/' . $filename;
-						else
-						    $file = $upload_dir['basedir'] . '/' . $filename;
+						}
 
 						file_put_contents( $file, $image_data );
 
@@ -331,7 +349,7 @@ class WDS_BC_Importer {
 							'post_mime_type' => $wp_filetype['type'],
 							'post_title'     => sanitize_file_name( $filename ),
 							'post_content'   => '',
-							'post_status'    => 'inherit'
+							'post_status'    => 'inherit',
 						);
 
 						$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
@@ -344,7 +362,6 @@ class WDS_BC_Importer {
 
 						set_post_thumbnail( $post_id, $attach_id );
 					}
-
 				} elseif ( $existing_post = get_page_by_title( $my_post['post_title'], 'OBJECT', 'bc_import_products' ) ) {
 
 					// Insert the post into the database and set the post and term ID.
@@ -353,7 +370,7 @@ class WDS_BC_Importer {
 
 					// Get the list of categories attached to a product.
 					$terms = array();
-					foreach( $item->categories as $item_category ) {
+					foreach ( $item->categories as $item_category ) {
 						$terms[] = $item_category->name;
 					}
 
@@ -371,10 +388,10 @@ class WDS_BC_Importer {
 						$image_data = file_get_contents( $image_url );
 						$filename   = basename( $image_url );
 
-						if( wp_mkdir_p( $upload_dir['path'] ) )
-						    $file = $upload_dir['path'] . '/' . $filename;
-						else
-						    $file = $upload_dir['basedir'] . '/' . $filename;
+						$file = $upload_dir['basedir'] . '/' . $filename;
+						if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+							$file = $upload_dir['path'] . '/' . $filename;
+						}
 
 						file_put_contents( $file, $image_data );
 
@@ -385,7 +402,7 @@ class WDS_BC_Importer {
 							'post_mime_type' => $wp_filetype['type'],
 							'post_title'     => sanitize_file_name( $filename ),
 							'post_content'   => '',
-							'post_status'    => 'inherit'
+							'post_status'    => 'inherit',
 						);
 
 						$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
@@ -398,9 +415,7 @@ class WDS_BC_Importer {
 
 						set_post_thumbnail( $post_id, $attach_id );
 					}
-
 				}
-
 			}
 		}
 	}
@@ -412,7 +427,7 @@ class WDS_BC_Importer {
 
 		// Grab each category listed in the BC array and make it a taxonomy term.
 		if ( isset( $this->bc_object ) && ! empty( $this->bc_object ) ) {
-			foreach( $this->bc_object[1]->categories as $category ) {
+			foreach ( $this->bc_object[1]->categories as $category ) {
 				$term_name = $category->name;
 				wp_insert_term( $term_name, 'product-categories' );
 			}
@@ -439,7 +454,7 @@ class WDS_BC_Importer {
 		}
 
 		// If status is OK, proceed.
-		if ( ! empty ( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
+		if ( ! empty( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
 
 			if ( isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) && ! empty( $_POST['big_cartel_importer_plugin_options']['store_name'] ) ) {
 
@@ -452,7 +467,6 @@ class WDS_BC_Importer {
 				$this->add_terms();
 				$this->import_products();
 			}
-
 		}
 	}
 
@@ -461,11 +475,18 @@ class WDS_BC_Importer {
 	 * Add the meta box.
 	 */
 	public function add_meta_box() {
-		add_meta_box( $this->metabox_settings['id'], $this->metabox_settings['title'], array( $this, 'metabox_fields' ), $this->metabox_settings['page'], $this->metabox_settings['context'], $this->metabox_settings['priority'] );
+		add_meta_box(
+			$this->metabox_settings['id'],
+			$this->metabox_settings['title'],
+			array( $this, 'metabox_fields' ),
+			$this->metabox_settings['page'],
+			$this->metabox_settings['context'],
+			$this->metabox_settings['priority']
+		);
 	}
 
 	/**
-	 * Display the box on the post edit page
+	 * Display the box on the post edit page.
 	 */
 	public function metabox_fields() {
 		global $post;
@@ -503,7 +524,7 @@ class WDS_BC_Importer {
 			return;
 		}
 
-		if ( 'page' == $_POST['post_type'] ) {
+		if ( 'page' === $_POST['post_type'] ) {
 			if ( ! current_user_can( 'edit_page', $post_id ) ) {
 				return;
 			}
