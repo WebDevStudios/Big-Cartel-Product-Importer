@@ -279,7 +279,6 @@ class WDS_BC_Importer {
 			// Get our store name.
 			$this->store_name = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
 
-			$options = get_option( 'big_cartel_importer_plugin_options' );
 			foreach ( $this->bc_object as $item ) {
 
 				// Get the post status.
