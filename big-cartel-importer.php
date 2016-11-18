@@ -224,7 +224,7 @@ class WDS_BC_Importer {
 			?>
 			<span><?php echo $message; ?></span>
 		</div>
-	<?php>
+	<?php
 	}
 
 	/**
