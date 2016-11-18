@@ -200,8 +200,8 @@ class WDS_BC_Importer {
 	 */
 	public function settings_store_name() {
 		// Get the total post count.
-		$count_posts = wp_count_posts( 'bc_import_products' );
-		$total_posts = $count_posts->publish + $count_posts->future + $count_posts->draft + $count_posts->pending + $count_posts->private;
+		$count_posts = (array) wp_count_posts( 'bc_import_products' );
+		$total_posts = array_sum( $count_posts );
 
 		// Get the total term count.
 		$count_terms = wp_count_terms( 'product-categories' );
