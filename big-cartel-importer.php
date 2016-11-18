@@ -43,8 +43,8 @@ class WDS_BC_Importer {
 
 		// Setup all our necessary variables.
 		$this->plugin_dir_path  = dirname( __FILE__ );
-		$this->options    = get_option( 'big_cartel_importer_plugin_options' );
-		$this->store_name = ( isset( $this->options['store_name'] ) ) ? esc_html( $this->options['store_name'] ) : '';
+		$this->options          = get_option( 'big_cartel_importer_plugin_options'. array() );
+		$this->store_name       = isset( $this->options['store_name'] );
 
 		if ( ! empty( $this->store_name ) ) {
 			// Set a URL to check if the store is in maintenance mode.
