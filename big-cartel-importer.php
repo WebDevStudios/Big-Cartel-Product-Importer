@@ -459,7 +459,7 @@ class WDS_BC_Importer {
 	 */
 	public function save_post( $post_id ) {
 
-		if ( ! isset( $_POST['big_cartel_importer_nonce'] ) || ! wp_verify_nonce( $_POST['big_cartel_importer_nonce'], 'big-cartel-importer' ) ) {
+		if ( ! isset( $_POST['big-cartel-importer'] ) || ! wp_verify_nonce( $_POST['big-cartel-importer'], 'big_cartel_importer_nonce' ) ) {
 			return;
 		}
 
