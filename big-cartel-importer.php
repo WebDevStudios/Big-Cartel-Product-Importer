@@ -500,8 +500,7 @@ class WDS_BC_Importer {
 	public function metabox_fields() {
 		global $post;
 
-		// Setup a nonce.
-		echo '<input type="hidden" name="big_cartel_importer_nonce" value="'. wp_create_nonce( 'big-cartel-importer' ) .'" />';
+		wp_nonce_field( 'big_cartel_importer_nonce', 'big-cartel-importer' );
 
 		// Display it all!
 		echo '<table class="form-table">';
