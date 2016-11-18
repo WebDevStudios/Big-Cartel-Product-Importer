@@ -53,28 +53,28 @@ class WDS_BC_Importer {
 
 		$this->metabox_settings = array(
 			'id'       => 'big-cartel-metabox',
-			'title'    => 'Product Information',
+			'title'    => esc_html__( 'Product Information', 'wdsbc' ),
 			'page'     => 'bc_import_products',
 			'context'  => 'normal',
 			'priority' => 'high',
 			'fields'   => array(
 				array(
-					'name' => 'ID',
-					'desc' => 'Big Cartel product ID number.',
+					'name' => esc_html__( 'ID', 'wdsbc' ),
+					'desc' => esc_html__( 'Big Cartel product ID number.', 'wdsbc' ),
 					'id'   => 'big_cartel_importer_id',
 					'type' => 'text',
 					'std'  => '',
 				),
 				array(
-					'name' => 'Price',
-					'desc' => 'Enter the price of the product without a dollar sign.',
+					'name' => esc_html__( 'Price', 'wdsbc' ),
+					'desc' => esc_html__( 'Enter the price of the product without a dollar sign.', 'wdsbc' ),
 					'id'   => 'big_cartel_importer_price',
 					'type' => 'text',
 					'std'  => '',
 				),
 				array(
-					'name' => 'Big Cartel URL',
-					'desc' => 'The URL for the product in your Big Cartel store.',
+					'name' => esc_html__( 'Big Cartel URL', 'wdsbc' ),
+					'desc' => esc_html__( 'The URL for the product in your Big Cartel store.', 'wdsbc' ),
 					'id'   => 'big_cartel_importer_link',
 					'type' => 'text',
 					'std'  => '',
@@ -111,20 +111,20 @@ class WDS_BC_Importer {
 	public function register_post_types() {
 
 		register_post_type( 'bc_import_products', array(
-				'labels'             => array(
-				'name'               => 'Products',
-				'singular_name'      => 'Product',
-				'add_new'            => 'Add New',
-				'add_new_item'       => 'Add New Product',
-				'edit_item'          => 'Edit Product',
-				'new_item'           => 'New Product',
-				'all_items'          => 'All Products',
-				'view_item'          => 'View Product',
-				'search_items'       => 'Search Products',
-				'not_found'          => 'No Products found',
-				'not_found_in_trash' => 'No Products found in Trash',
-				'menu_name'          => 'Products',
-			  ),
+			'labels'             => array(
+				'name'               => _x( 'Products', 'Post type general name', 'wdsbc' ),
+				'singular_name'      => _x( 'Product', 'Post type singular name', 'wdsbc' ),
+				'add_new'            => __( 'Add New', 'wdsbc' ),
+				'add_new_item'       => __( 'Add New Product', 'wdsbc' ),
+				'edit_item'          => __( 'Edit Product', 'wdsbc' ),
+				'new_item'           => __( 'New Product', 'wdsbc' ),
+				'all_items'          => __( 'All Products', 'wdsbc' ),
+				'view_item'          => __( 'View Product', 'wdsbc' ),
+				'search_items'       => __( 'Search Products', 'wdsbc' ),
+				'not_found'          => __( 'No Products found', 'wdsbc' ),
+				'not_found_in_trash' => __( 'No Products found in Trash', 'wdsbc' ),
+				'menu_name'          => __( 'Products', 'wdsbc' ),
+			),
 			'hierarchical'       => false,
 			'public'             => true,
 			'publicly_queryable' => true,
@@ -145,18 +145,18 @@ class WDS_BC_Importer {
 
 		register_taxonomy( 'product-categories', 'bc_import_products', array(
 			'labels'            => array(
-				'name'                       => _x( 'Product Categories', 'taxonomy general name' ),
-				'singular_name'              => _x( 'Product Category', 'taxonomy singular name' ),
-				'search_items'               => __( 'Search Product Categories' ),
-				'popular_items'              => __( 'Common Product Categories' ),
-				'all_items'                  => __( 'All Product Categories' ),
-				'edit_item'                  => __( 'Edit Product Category' ),
-				'update_item'                => __( 'Update Product Category' ),
-				'add_new_item'               => __( 'Add New Product Category' ),
-				'new_item_name'              => __( 'New Product Category Name' ),
-				'separate_items_with_commas' => __( 'Separate Product Categories with commas' ),
-				'add_or_remove_items'        => __( 'Add or remove Product Categories' ),
-				'choose_from_most_used'      => __( 'Choose from the most used Product Categories' ),
+				'name'                       => _x( 'Product Categories', 'Taxonomy general name', 'wdsbc' ),
+				'singular_name'              => _x( 'Product Category', 'Taxonomy singular name', 'wdsbc' ),
+				'search_items'               => __( 'Search Product Categories', 'wdsbc' ),
+				'popular_items'              => __( 'Common Product Categories', 'wdsbc' ),
+				'all_items'                  => __( 'All Product Categories', 'wdsbc' ),
+				'edit_item'                  => __( 'Edit Product Category', 'wdsbc' ),
+				'update_item'                => __( 'Update Product Category', 'wdsbc' ),
+				'add_new_item'               => __( 'Add New Product Category', 'wdsbc' ),
+				'new_item_name'              => __( 'New Product Category Name', 'wdsbc' ),
+				'separate_items_with_commas' => __( 'Separate Product Categories with commas', 'wdsbc' ),
+				'add_or_remove_items'        => __( 'Add or remove Product Categories', 'wdsbc' ),
+				'choose_from_most_used'      => __( 'Choose from the most used Product Categories', 'wdsbc' ),
 			),
 			'hierarchical'      => true,
 			'show_ui'           => true,
@@ -172,7 +172,7 @@ class WDS_BC_Importer {
 	 * Add our menu items.
 	 */
 	public function admin_menu() {
-		add_options_page( 'Big Cartel Importer', 'Big Cartel Importer', 'administrator', 'big-cartel-importer', array( $this, 'admin_page' ) );
+		add_options_page( __( 'Big Cartel Importer', 'wdsbc' ), __( 'Big Cartel Importer', 'wdsbc' ), 'administrator', 'big-cartel-importer', array( $this, 'admin_page' ) );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class WDS_BC_Importer {
 	public function register_admin_settings() {
 		register_setting( 'big_cartel_importer_plugin_options', 'big_cartel_importer_plugin_options', array( $this, 'validate_settings' ) );
 		add_settings_section( 'big_cartel_importer_main_options', '', '', 'big-cartel-importer' );
-		add_settings_field( 'store_name', 'Big Cartel Store Name: ', array( $this, 'settings_store_name' ), 'big-cartel-importer', 'big_cartel_importer_main_options' );
+		add_settings_field( 'store_name', __( 'Big Cartel Store Name: ', 'wdsbc' ), array( $this, 'settings_store_name' ), 'big-cartel-importer', 'big_cartel_importer_main_options' );
 	}
 
 	/**
