@@ -223,6 +223,7 @@ class WDS_BC_Importer {
 	 * @return array
 	 */
 	public function validate_settings( $big_cartel_importer_plugin_options ) {
+		$big_cartel_importer_plugin_options['store_name'] = $this->parse_username( $big_cartel_importer_plugin_options['store_name'] );
 		return $big_cartel_importer_plugin_options;
 	}
 
@@ -520,6 +521,28 @@ class WDS_BC_Importer {
 				delete_post_meta( $post_id, $field['id'], $old );
 			}
 		}
+	}
+
+	/**
+	 * Parse out the BigCartel username from url.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $url User's store URL.
+	 * @return mixed User's username.
+	 */
+	public function parse_username( $url ) {
+		$parsed_url = wp_parse_url( untrailingslashit( $url ) );
+
+		if ( ! empty( $parsed_url['host'] ) && isset( $parsed_url['host'] ) ) {
+			$parts = explode( '.', $parsed_url['host'] );
+		}
+
+		if ( ! empty( $parsed_url['path'] ) && isset( $parsed_url['path'] ) ) {
+			$parts = explode( '.', $parsed_url['path'] );
+		}
+
+		return $parts[0];
 	}
 }
 new WDS_BC_Importer;
