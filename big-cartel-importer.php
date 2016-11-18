@@ -210,7 +210,7 @@ class WDS_BC_Importer {
 		?>
 		<div class="input-wrap">
 			<div class="left">
-				<input name="big_cartel_importer_plugin_options[store_name]" style="width:30%;" type="text" value="<?php esc_attr_e( $options['store_name'] ); ?>" />
+				<label><input name="big_cartel_importer_plugin_options[store_name]" style="width:30%;" type="text" value="<?php esc_attr_e( $options['store_name'] ); ?>" /></label>
 			</div>
 			<div class='right'>
 				<?php
