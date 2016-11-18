@@ -195,11 +195,6 @@ class WDS_BC_Importer {
 		// Get the total term count.
 		$count_terms = wp_count_terms( 'product-categories' );
 
-		if ( ! empty( $this->store_name ) ) {
-			// Set a URL to check if the store is in maintenance mode.
-			$maintenance = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
-		}
-
 		$options = get_option( 'big_cartel_importer_plugin_options' );
 		?>
 		<div class="input-wrap">
@@ -216,21 +211,20 @@ class WDS_BC_Importer {
 				?>
 			</div>
 			<?php
-			if ( is_wp_error( $maintenance ) || 200 !== wp_remote_retrieve_response_code( $maintenance ) ) {
-				printf(
-					'<span>%s</span></div>',
-					esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'wdsbc' )
-				);
+			if ( empty( $this->bc_object ) ) {
+				$message = esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'wdsbc' );
+
 			} else {
-				printf(
-					'<span>%s</span></div>',
-					sprintf(
-						esc_html__( 'You have imported %s products in %s categories.', 'wdsbc' ),
-						'<strong>' . esc_html( $total_posts ) . '</strong>',
-						'<strong>' . esc_html( $count_terms ) . '</strong>'
-					)
+				$message = sprintf(
+					esc_html__( 'You have imported %s products in %s categories.', 'wdsbc' ),
+					'<strong>' . esc_html( $total_posts ) . '</strong>',
+					'<strong>' . esc_html( $count_terms ) . '</strong>'
 				);
 			}
+			?>
+			<span><?php echo $message; ?></span>
+		</div>
+	<?php>
 	}
 
 	/**
