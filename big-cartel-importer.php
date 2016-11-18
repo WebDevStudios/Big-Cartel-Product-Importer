@@ -160,16 +160,16 @@ class WDS_BC_Importer {
 	 * Add our menu items.
 	 */
 	public function admin_menu() {
-		add_options_page( 'Big Cartel Importer', 'Big Cartel Importer', 'administrator', __FILE__, array( $this, 'admin_page' ) );
+		add_options_page( 'Big Cartel Importer', 'Big Cartel Importer', 'administrator', 'big-cartel-importer', array( $this, 'admin_page' ) );
 	}
 
 	/**
 	 * Register settings and fields.
 	 */
 	public function register_admin_settings() {
-		register_setting( 'big_cartel_importer_plugin_options', 'big_cartel_importer_plugin_options', array( &$this, 'validate_settings' ) );
-		add_settings_section( 'big_cartel_importer_main_options', '', '', __FILE__ );
-		add_settings_field( 'store_name', 'Big Cartel Store Name: ', array( &$this, 'settings_store_name' ), __FILE__, 'big_cartel_importer_main_options' );
+		register_setting( 'big_cartel_importer_plugin_options', 'big_cartel_importer_plugin_options', array( $this, 'validate_settings' ) );
+		add_settings_section( 'big_cartel_importer_main_options', '', '', 'big-cartel-importer' );
+		add_settings_field( 'store_name', 'Big Cartel Store Name: ', array( $this, 'settings_store_name' ), 'big-cartel-importer', 'big_cartel_importer_main_options' );
 	}
 
 	/**
@@ -246,7 +246,7 @@ class WDS_BC_Importer {
 			<p><?php esc_html_e( 'Set the URL of your Big Cartel store to pull in your products.', 'wdsbc' ); ?></p>
 			<form id="options-form" method="post" action="options.php" enctype="multipart/form-data">
 				<?php settings_fields( 'big_cartel_importer_plugin_options' ); ?>
-				<?php do_settings_sections(__FILE__); ?>
+				<?php do_settings_sections( 'big-cartel-importer' ); ?>
 				<p class="submit"><input name="submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Run Import', 'wdsbc' ); ?>" /></p>
 			</form>
 		</div>
@@ -494,7 +494,7 @@ class WDS_BC_Importer {
 		global $post;
 
 		// Setup a nonce.
-		echo '<input type="hidden" name="big_cartel_importer_nonce" value="'. wp_create_nonce( basename( __FILE__ ) ) .'" />';
+		echo '<input type="hidden" name="big_cartel_importer_nonce" value="'. wp_create_nonce( 'big-cartel-importer' ) .'" />';
 
 		// Display it all!
 		echo '<table class="form-table">';
@@ -518,7 +518,7 @@ class WDS_BC_Importer {
 	 */
 	public function save_post( $post_id ) {
 
-		if ( ! isset( $_POST['big_cartel_importer_nonce'] ) || ! wp_verify_nonce( $_POST['big_cartel_importer_nonce'], basename( __FILE__ ) ) ) {
+		if ( ! isset( $_POST['big_cartel_importer_nonce'] ) || ! wp_verify_nonce( $_POST['big_cartel_importer_nonce'], 'big-cartel-importer' ) ) {
 			return;
 		}
 
