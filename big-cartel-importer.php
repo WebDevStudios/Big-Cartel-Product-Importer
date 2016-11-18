@@ -240,7 +240,6 @@ class WDS_BC_Importer {
 		return $big_cartel_importer_plugin_options;
 	}
 
-
 	/**
 	 * Build the admin page.
 	 */
