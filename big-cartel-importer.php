@@ -22,7 +22,7 @@ add_action( 'init', 'big_cartel_importer_styles' );
  */
 class WDS_BC_Importer {
 
-	public $pluing_dir_path = '';
+	public $plugin_dir_path = '';
 
 	public $options = array();
 
@@ -43,7 +43,7 @@ class WDS_BC_Importer {
 
 		// Setup all our necessary variables.
 		$this->plugin_dir_path  = dirname( __FILE__ );
-		$this->options          = get_option( 'big_cartel_importer_plugin_options'. array() );
+		$this->options          = get_option( 'big_cartel_importer_plugin_options', array() );
 
 		if ( $this->options['store_name'] ) {
 			$this->store_name = $this->options['store_name'];
