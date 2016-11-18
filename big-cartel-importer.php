@@ -455,28 +455,20 @@ class WDS_BC_Importer {
 			return;
 		}
 
-		if ( ! empty( $this->store_name ) ) {
-			// Set a URL to check if the store is in maintenance mode.
-			$maintenance = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
-		}
-
-		// If status is OK, proceed.
-		if ( ! empty( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
-
-			if ( isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) && ! empty( $_POST['big_cartel_importer_plugin_options']['store_name'] ) ) {
-
-				// Update our class variables.
-				$this->store_name = $_POST['big_cartel_importer_plugin_options']['store_name'];
-				$response = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
-				$this->bc_object  = json_decode( wp_remote_retrieve_body( $response ) );
-
-				// Add our terms and import our products.
-				$this->add_terms();
-				$this->import_products();
+		if ( empty( $this->bc_object ) ) {
+			// Most likely to get here on initial save.
+			if (
+				isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) &&
+				! empty( $_POST['big_cartel_importer_plugin_options']['store_name'] )
+			) {
+				$this->store_name = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
+				$this->set_bigcartel_results();
 			}
 		}
-	}
 
+		$this->add_terms();
+		$this->import_products();
+	}
 
 	/**
 	 * Add the meta box.
