@@ -46,17 +46,7 @@ class WDS_BC_Importer {
 		$this->options          = get_option( 'big_cartel_importer_plugin_options'. array() );
 		$this->store_name       = isset( $this->options['store_name'] );
 
-		if ( ! empty( $this->store_name ) ) {
-			// Set a URL to check if the store is in maintenance mode.
-			$maintenance = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
-		}
-
-		// If status is OK, proceed.
-		if ( ! empty( $maintenance ) && 200 === wp_remote_retrieve_response_code( $maintenance ) ) {
-			$this->bc_object = (
-				! empty( $this->store_name )
-			) ? json_decode( wp_remote_retrieve_body( $maintenance ) ) : '';
-		}
+		$this->set_bigcartel_results();
 
 		$this->metabox_settings = array(
 			'id'       => 'big-cartel-metabox',
@@ -97,6 +87,18 @@ class WDS_BC_Importer {
 		add_action( 'admin_init', array( $this, 'process_settings_save' ) );
 		add_action( 'admin_menu', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_post' ) );
+	}
+
+	public function set_bigcartel_results() {
+		if ( ! empty( $this->store_name ) ) {
+			// Set a URL to check if the store is in maintenance mode.
+			$response = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
+		}
+
+		// If status is OK, proceed.
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+			$this->bc_object = json_decode( wp_remote_retrieve_body( $response ) );
+		}
 	}
 
 	/**
