@@ -504,15 +504,19 @@ class WDS_BC_Importer {
 
 		// Display it all!
 		echo '<table class="form-table">';
+		$row_template = '<tr><th style="width:20%%"><label for="%s">%s</label></th><td><input type="text" name="%s" id="%s" value="%s" size="30" style="width:97%%" /><br />%s</td></tr>';
 		foreach ( $this->metabox_settings['fields'] as $field ) {
 			$meta = get_post_meta( $post->ID, $field['id'], true );
-			echo '<tr><th style="width: 20%"><label for="'. $field['id'] .'">'. $field['name'] .'</label></th><td>';
-			switch ( $field['type'] ) {
-				case 'text':
-					echo '<input type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ? $meta : $field['std'], '" size="30" style="width:97%" /><br />'. $field['desc'];
-					break;
-			}
-			echo '</td></tr>';
+			$meta = ( $meta ) ? $meta : $field['std'];
+			printf(
+				$row_template,
+				$field['id'],
+				$field['name'],
+				$field['id'],
+				$field['id'],
+				$meta,
+				$field['desc']
+			);
 		}
 		echo '</table>';
 	}
