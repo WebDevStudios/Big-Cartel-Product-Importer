@@ -36,7 +36,7 @@ class WDS_BC_Importer {
 	public function __construct() {
 
 		// Setup all our necessary variables.
-		$plugin_dir_path  = dirname( __FILE__ );
+		$this->plugin_dir_path  = dirname( __FILE__ );
 		$this->options    = get_option( 'big_cartel_importer_plugin_options' );
 		$this->store_name = ( isset( $this->options['store_name'] ) ) ? esc_html( $this->options['store_name'] ) : '';
 
