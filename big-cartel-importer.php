@@ -394,15 +394,17 @@ class WDS_BC_Importer {
 			return;
 		}
 
-		if ( empty( $this->bc_object ) ) {
-			// Most likely to get here on initial save.
-			if (
-				isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) &&
-				! empty( $_POST['big_cartel_importer_plugin_options']['store_name'] )
-			) {
-				$this->store_name = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
-				$this->set_bigcartel_results();
-			}
+		if (
+			isset( $_POST['big_cartel_importer_plugin_options']['store_name'] ) &&
+			! empty( $_POST['big_cartel_importer_plugin_options']['store_name'] )
+		) {
+			$saved_store = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
+		}
+
+		if ( empty( $this->bc_object ) || ( $saved_store !== $this->store_name ) ) {
+			// Most likely to get here on initial save or store change.
+			$this->store_name = $saved_store;
+			$this->set_bigcartel_results();
 		}
 
 		$this->add_terms();
