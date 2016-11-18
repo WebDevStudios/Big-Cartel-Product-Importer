@@ -274,164 +274,93 @@ class WDS_BC_Importer {
 	 */
 	public function import_products() {
 
-		// Grab the JSON feed as an array.
-		if ( isset( $this->bc_object ) && ! empty( $this->bc_object ) ) {
-			// Get our store name.
-			$this->store_name = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
+		foreach ( $this->bc_object as $item ) {
 
-			foreach ( $this->bc_object as $item ) {
+			// Get the post status.
+			$product_status = ( 'sold-out' === $item->status ) ? 'private' : 'publish';
 
-				// Get the post status.
-				$product_status = ( 'sold-out' === $item->status ) ? 'private' : 'publish';
+			// Format the date so we can set the post date as the product creation date.
+			$product_publish_date = date( 'Y-m-d H:i:s', strtotime( $item->created_at ) );
 
-				// Format the date so we can set the post date as the product creation date.
-				$product_publish_date = date( 'Y-m-d H:i:s', strtotime( $item->created_at ) );
+			// Set some other variables in place.
+			if ( isset( $item->id ) ) {
+				$product_id = intval( $item->id );
+			}
+			if ( isset( $item->name ) ) {
+				$product_name = esc_html( $item->name );
+			}
+			if ( isset( $item->description ) ) {
+				$product_description = wp_kses_post( $item->description );
+			}
+			if ( isset( $item->price ) ) {
+				$product_price = intval( $item->price );
+			}
+			if ( isset( $item->permalink ) ) {
+				$product_link = esc_url( 'http://'. $this->store_name .'.bigcartel.com/product/'. $item->permalink );
+			}
+			if ( isset( $item->images[0]->url ) ) {
+				$product_image = esc_url( $item->images[0]->url );
+			}
 
-				// Set some other variables in place.
-				if ( isset( $item->id ) ) {
-					$product_id = intval( $item->id );
+			// Get the category list.
+			$product_category_list = array();
+			foreach ( $item->categories as $item_category ) {
+				// Build the array of attached product categories from BC.
+				$product_category_list[] = $item_category->name;
+			}
+			$product_categories = implode( ', ', $product_category_list );
+
+			// Setup the array for wp_insert_post.
+			$my_post = array(
+				'post_title'   => $product_name,
+				'post_content' => $product_description,
+				'post_status'  => $product_status,
+				'post_author'  => 1,
+				'post_date'    => $product_publish_date,
+				'post_type'    => 'bc_import_products',
+				'tax_input'    => array( 'product-categories' => array( $product_categories ) ),
+			);
+
+			$product_exists = get_page_by_title( $my_post['post_title'], 'OBJECT', 'bc_import_products' );
+
+			if ( $product_exists instanceof WP_Post ) {
+				$my_post['ID'] = intval( $product_exists->ID );
+				$post_id       = wp_update_post( $my_post );
+			} else {
+				$post_id = wp_insert_post( $my_post );
+			}
+
+			$terms = array();
+			foreach ( $item->categories as $item_category ) {
+				$terms[] = $item_category->name;
+			}
+
+			// Attach the categories to the posts.
+			wp_set_object_terms( $post_id, $terms, 'product-categories' );
+
+			update_post_meta( $post_id, 'big_cartel_importer_id', $product_id );
+			update_post_meta( $post_id, 'big_cartel_importer_price', $product_price );
+			update_post_meta( $post_id, 'big_cartel_importer_link', $product_link );
+
+			if ( isset( $item->images[0]->url ) ) {
+				$tmp = download_url( $item->images[0]->url );
+
+				$file_array['name']     = basename( $item->images[0]->url );
+				$file_array['tmp_name'] = $tmp;
+
+				if ( is_wp_error( $tmp ) ) {
+					@unlink( $file_array['tmp_name'] );
+					$file_array['tmp_name'] = '';
 				}
-				if ( isset( $item->name ) ) {
-					$product_name = esc_html( $item->name );
-				}
-				if ( isset( $item->description ) ) {
-					$product_description = wp_kses_post( $item->description );
-				}
-				if ( isset( $item->price ) ) {
-					$product_price = intval( $item->price );
-				}
-				if ( isset( $item->permalink ) ) {
-					$product_link = esc_url( 'http://'. $this->store_name .'.bigcartel.com/product/'. $item->permalink );
-				}
-				if ( isset( $item->images[0]->url ) ) {
-					$product_image = esc_url( $item->images[0]->url );
-				}
 
-				// Get the category list.
-				$product_category_list = array();
-				foreach ( $item->categories as $item_category ) {
-					// Build the array of attached product categories from BC.
-					$product_category_list[] = $item_category->name;
-					$category_name = $item_category->name;
-				}
-				$product_categories = implode( ', ', $product_category_list );
+				$attachments = get_children( array( 'post_parent' => $post_id, 'post_type' => 'attachment' ) );
+				$existing_images = wp_list_pluck( $attachments, 'post_title' );
+				$new_image = array_shift( explode( '.', $file_array['name'] ) );
 
-				// Setup the array for wp_insert_post.
-				$my_post = array(
-					'post_title'   => $product_name,
-					'post_content' => $product_description,
-					'post_status'  => $product_status,
-					'post_author'  => 1,
-					'post_date'    => $product_publish_date,
-					'post_type'    => 'bc_import_products',
-					'tax_input'    => array( 'product-categories' => array( $product_categories ) ),
-				);
+				if ( ! in_array( $new_image, $existing_images ) ) {
+					$thumbnail_id = media_handle_sideload( $file_array, $post_id );
 
-				if ( ! get_page_by_title( $my_post['post_title'], 'OBJECT', 'bc_import_products' ) ) {
-
-					// Insert the post into the database and set the post and term ID.
-					$post_id = wp_insert_post( $my_post );
-
-					// Get the list of categories attached to a product.
-					$terms = array();
-					foreach ( $item->categories as $item_category ) {
-						$terms[] = $item_category->name;
-					}
-
-					// Attach the categories to the posts.
-					wp_set_object_terms( $post_id, $terms, 'product-categories' );
-
-					update_post_meta( $post_id, 'big_cartel_importer_id', $product_id );
-					update_post_meta( $post_id, 'big_cartel_importer_price', $product_price );
-					update_post_meta( $post_id, 'big_cartel_importer_link', $product_link );
-
-					// This will import the images to the media library.
-					if ( isset( $item->images[0]->url ) ) {
-						$image_url  = esc_url( $item->images[0]->url );
-						$upload_dir = wp_upload_dir();
-						$image_data = file_get_contents( $image_url );
-						$filename   = basename( $image_url );
-
-						$file = $upload_dir['basedir'] . '/' . $filename;
-						if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-						    $file = $upload_dir['path'] . '/' . $filename;
-						}
-
-						file_put_contents( $file, $image_data );
-
-						// Now let's assign the image to the corresponding post.
-						$wp_filetype = wp_check_filetype( $filename, null );
-
-						$attachment = array(
-							'post_mime_type' => $wp_filetype['type'],
-							'post_title'     => sanitize_file_name( $filename ),
-							'post_content'   => '',
-							'post_status'    => 'inherit',
-						);
-
-						$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
-
-						require_once( ABSPATH . 'wp-admin/includes/image.php' );
-
-						$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-
-						wp_update_attachment_metadata( $attach_id, $attach_data );
-
-						set_post_thumbnail( $post_id, $attach_id );
-					}
-				} elseif ( $existing_post = get_page_by_title( $my_post['post_title'], 'OBJECT', 'bc_import_products' ) ) {
-
-					// Insert the post into the database and set the post and term ID.
-					$my_post['ID'] = intval( $existing_post->ID );
-					$post_id = wp_update_post( $my_post );
-
-					// Get the list of categories attached to a product.
-					$terms = array();
-					foreach ( $item->categories as $item_category ) {
-						$terms[] = $item_category->name;
-					}
-
-					// Attach the categories to the posts.
-					wp_set_object_terms( $post_id, $terms, 'product-categories' );
-
-					update_post_meta( $post_id, 'big_cartel_importer_id', $product_id );
-					update_post_meta( $post_id, 'big_cartel_importer_price', $product_price );
-					update_post_meta( $post_id, 'big_cartel_importer_link', $product_link );
-
-					// This will import the images to the media library.
-					if ( isset( $item->images[0]->url ) ) {
-						$image_url  = esc_url( $item->images[0]->url );
-						$upload_dir = wp_upload_dir();
-						$image_data = file_get_contents( $image_url );
-						$filename   = basename( $image_url );
-
-						$file = $upload_dir['basedir'] . '/' . $filename;
-						if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-							$file = $upload_dir['path'] . '/' . $filename;
-						}
-
-						file_put_contents( $file, $image_data );
-
-						// Now let's assign the image to the corresponding post.
-						$wp_filetype = wp_check_filetype( $filename, null );
-
-						$attachment = array(
-							'post_mime_type' => $wp_filetype['type'],
-							'post_title'     => sanitize_file_name( $filename ),
-							'post_content'   => '',
-							'post_status'    => 'inherit',
-						);
-
-						$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
-
-						require_once( ABSPATH . 'wp-admin/includes/image.php' );
-
-						$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-
-						wp_update_attachment_metadata( $attach_id, $attach_data );
-
-						set_post_thumbnail( $post_id, $attach_id );
-					}
+					set_post_thumbnail( $post_id, $thumbnail_id );
 				}
 			}
 		}
