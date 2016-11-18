@@ -580,4 +580,5 @@ class WDS_BC_Importer {
 		return $parts[0];
 	}
 }
-new WDS_BC_Importer;
+$WDS_BC_Importer = new WDS_BC_Importer;
+$WDS_BC_Importer->do_hooks();
