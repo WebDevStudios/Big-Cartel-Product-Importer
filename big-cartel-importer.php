@@ -81,8 +81,9 @@ class WDS_BC_Importer {
 				),
 			),
 		);
+	}
 
-		// Hook in all our necessary functions.
+	public function do_hooks() {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
