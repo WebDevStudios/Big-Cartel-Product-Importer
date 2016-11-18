@@ -83,6 +83,11 @@ class WDS_BC_Importer {
 		);
 	}
 
+	/**
+	 * Runs all our needed hooks.
+	 *
+	 * @since 1.1.0
+	 */
 	public function do_hooks() {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
@@ -93,7 +98,13 @@ class WDS_BC_Importer {
 		add_action( 'save_post', array( $this, 'save_post' ) );
 	}
 
+	/**
+	 * Sets our results array for import later.
+	 *
+	 * @since 1.1.0
+	 */
 	public function set_bigcartel_results() {
+		$response = '';
 		if ( ! empty( $this->store_name ) ) {
 			// Set a URL to check if the store is in maintenance mode.
 			$response = wp_remote_get( 'http://api.bigcartel.com/' . $this->store_name . '/products.js' );
