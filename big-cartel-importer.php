@@ -28,7 +28,7 @@ class WDS_BC_Importer {
 	 * @since 1.0.0
 	 * @var mixed
 	 */
-	public $bc_object = null;
+	public $bc_object = array();
 
 	/**
 	 * WDS_BC_Importer constructor.
