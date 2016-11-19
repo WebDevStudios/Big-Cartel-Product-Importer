@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Big Cartel Product Importer
-Plugin URI: http://www.webdevstudios.com
+Plugin URI: http://www.pluginize.com
 Description: Import your products from Big Cartel to a Product custom post type in WordPress.
-Version: 1.0.2
-Author: WebDevStudios
-Author URI: http://www.webdevstudios.com
+Version: 1.1.0
+Author: Pluginize
+Author URI: http://www.pluginize.com
 License: GPLv2
 */
 
