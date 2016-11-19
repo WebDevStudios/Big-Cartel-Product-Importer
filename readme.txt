@@ -7,7 +7,7 @@ Author: WebDevStudios
 Author URI: http://www.webdevstudios.com
 Requires at least: 4.2
 Tested up to: 4.6
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ After struggling to find a solution to the problem of importing BigCartel produc
 4. Enter your store name/base URL in the text field and press "Run Import".  Your products and categories will be imported and your results will display.
 
 == Changelog ==
+
+= 1.1.0 =
+* Updated: Major refactoring of entire plugin, without lost existing functionality.
+* Added: Big Cartel user setting field smart enough to handle full URLs.
 
 = 1.0.2 =
 * Code cleanup and modernization for WordPress compatibility and different server setups.
