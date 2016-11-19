@@ -7,8 +7,8 @@
  */
 function wdsbc_add_settings_menu() {
 	add_options_page(
-		__( 'Big Cartel Importer', 'wdsbc' ),
-		__( 'Big Cartel Importer', 'wdsbc' ),
+		__( 'Big Cartel Importer', 'big-cartel-product-importer' ),
+		__( 'Big Cartel Importer', 'big-cartel-product-importer' ),
 		'manage_options',
 		'big-cartel-importer',
 		'wdsbc_settings_admin_page'
@@ -30,7 +30,7 @@ function register_admin_settings() {
 	add_settings_section( 'big_cartel_importer_main_options', '', '', 'big-cartel-importer' );
 	add_settings_field(
 		'store_name',
-		__( 'Big Cartel Store Name: ', 'wdsbc' ),
+		__( 'Big Cartel Store Name: ', 'big-cartel-product-importer' ),
 		'wdsbc_settings_store_name',
 		'big-cartel-importer',
 		'big_cartel_importer_main_options'
@@ -60,7 +60,7 @@ function wdsbc_settings_store_name() {
 		<div class='right'>
 			<?php
 			printf(
-				esc_html__( 'If your store URL is: %s, enter %s in the text field.', 'wdsbc' ),
+				esc_html__( 'If your store URL is: %s, enter %s in the text field.', 'big-cartel-product-importer' ),
 				'http://<strong>yourstorename</strong>.bigcartel.com',
 				'<strong>yourstorename</strong>'
 			);
@@ -70,11 +70,11 @@ function wdsbc_settings_store_name() {
 		$wdsbc = new WDS_BC_Importer();
 
 		if ( ! $wdsbc->has_data() ) {
-			$message = esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'wdsbc' );
+			$message = esc_html__( 'Your store is currently in maintenance mode and can not have its products imported.', 'big-cartel-product-importer' );
 
 		} else {
 			$message = sprintf(
-				esc_html__( 'You have imported %s products in %s categories.', 'wdsbc' ),
+				esc_html__( 'You have imported %s products in %s categories.', 'big-cartel-product-importer' ),
 				'<strong>' . esc_html( $total_posts ) . '</strong>',
 				'<strong>' . esc_html( $count_terms ) . '</strong>'
 			);
@@ -94,13 +94,13 @@ function wdsbc_settings_admin_page() {
 	?>
 	<div id="theme-options-wrap">
 		<div class="icon32" id="icon-tools"></div>
-		<h2><?php esc_html_e( 'Big Cartel Importer Options', 'wdsbc' ); ?></h2>
-		<p><?php esc_html_e( 'Set the URL of your Big Cartel store to pull in your products.', 'wdsbc' ); ?></p>
+		<h2><?php esc_html_e( 'Big Cartel Importer Options', 'big-cartel-product-importer' ); ?></h2>
+		<p><?php esc_html_e( 'Set the URL of your Big Cartel store to pull in your products.', 'big-cartel-product-importer' ); ?></p>
 		<form id="options-form" method="post" action="options.php" enctype="multipart/form-data">
 			<?php settings_fields( 'big_cartel_importer_plugin_options' ); ?>
 			<?php do_settings_sections( 'big-cartel-importer' ); ?>
 			<p class="submit">
-				<input name="submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save and run import', 'wdsbc' ); ?>" />
+				<input name="submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save and run import', 'big-cartel-product-importer' ); ?>" />
 			</p>
 		<?php wp_nonce_field( 'big_cartel_importer_settings_nonce', 'big-cartel-importer-settings' ); ?>
 		</form>

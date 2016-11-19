@@ -3,28 +3,28 @@
 function wdsbc_ge_metabox_config() {
 	return array(
 		'id'       => 'big-cartel-metabox',
-		'title'    => esc_html__( 'Product Information', 'wdsbc' ),
+		'title'    => esc_html__( 'Product Information', 'big-cartel-product-importer' ),
 		'page'     => 'bc_import_products',
 		'context'  => 'normal',
 		'priority' => 'high',
 		'fields'   => array(
 			array(
-				'name' => esc_html__( 'ID', 'wdsbc' ),
-				'desc' => esc_html__( 'Big Cartel product ID number.', 'wdsbc' ),
+				'name' => esc_html__( 'ID', 'big-cartel-product-importer' ),
+				'desc' => esc_html__( 'Big Cartel product ID number.', 'big-cartel-product-importer' ),
 				'id'   => 'big_cartel_importer_id',
 				'type' => 'text',
 				'std'  => '',
 			),
 			array(
-				'name' => esc_html__( 'Price', 'wdsbc' ),
-				'desc' => esc_html__( 'Enter the price of the product without a dollar sign.', 'wdsbc' ),
+				'name' => esc_html__( 'Price', 'big-cartel-product-importer' ),
+				'desc' => esc_html__( 'Enter the price of the product without a dollar sign.', 'big-cartel-product-importer' ),
 				'id'   => 'big_cartel_importer_price',
 				'type' => 'text',
 				'std'  => '',
 			),
 			array(
-				'name' => esc_html__( 'Big Cartel URL', 'wdsbc' ),
-				'desc' => esc_html__( 'The URL for the product in your Big Cartel store.', 'wdsbc' ),
+				'name' => esc_html__( 'Big Cartel URL', 'big-cartel-product-importer' ),
+				'desc' => esc_html__( 'The URL for the product in your Big Cartel store.', 'big-cartel-product-importer' ),
 				'id'   => 'big_cartel_importer_link',
 				'type' => 'text',
 				'std'  => '',
