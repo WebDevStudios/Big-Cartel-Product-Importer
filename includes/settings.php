@@ -81,7 +81,7 @@ function wdsbc_settings_store_name() {
 			);
 		}
 		?>
-		<span><?php echo $message; // WPCS: XSS ok. ?></span>
+		<p><?php echo $message; // WPCS: XSS ok. ?></p>
 	</div>
 	<?php
 }
