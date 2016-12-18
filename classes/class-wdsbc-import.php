@@ -53,9 +53,11 @@ class WDS_BC_Importer {
 	/**
 	 * Output the post data and create our posts.
 	 */
-	public function import_products() {
+	public function import_products( $args = array() ) {
+		$offset = ( isset( $args['offset'] ) ) ? $args['offset'] : 0;
 
-		foreach ( $this->bc_object as $item ) {
+		$products = ( ! empty( $offset ) ) ? array_slice( $this->bc_object, $offset ) : $this->bc_object;
+		foreach ( $products as $item ) {
 
 			$product_name = $product_description = $product_id = $product_price = $product_link = $product_image = '';
 
