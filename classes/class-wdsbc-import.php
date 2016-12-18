@@ -171,4 +171,8 @@ class WDS_BC_Importer {
 		}
 		return true;
 	}
+
+	public function get_shop_count() {
+		return count( $this->bc_object );
+	}
 }
