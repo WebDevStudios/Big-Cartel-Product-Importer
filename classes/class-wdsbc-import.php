@@ -138,7 +138,8 @@ class WDS_BC_Importer {
 
 				$attachments     = get_children( array( 'post_parent' => $post_id, 'post_type' => 'attachment' ) );
 				$existing_images = wp_list_pluck( $attachments, 'post_title' );
-				$new_image       = array_shift( explode( '.', $file_array['name'] ) );
+				$files = explode( '.', $file_array['name'] );
+				$new_image       = array_shift( $files );
 
 				if ( ! in_array( $new_image, $existing_images, true ) ) {
 					$thumbnail_id = media_handle_sideload( $file_array, $post_id );
