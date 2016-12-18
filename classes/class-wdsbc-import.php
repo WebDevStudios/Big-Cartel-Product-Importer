@@ -26,7 +26,7 @@ class WDS_BC_Importer {
 
 		$this->options = get_option( 'big_cartel_importer_plugin_options', array() );
 
-		if ( $this->options['store_name'] ) {
+		if ( isset( $this->options['store_name'] ) ) {
 			$this->store_name = $this->options['store_name'];
 		}
 
