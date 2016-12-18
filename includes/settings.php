@@ -74,8 +74,9 @@ function wdsbc_settings_store_name() {
 
 		} else {
 			$message = sprintf(
-				esc_html__( 'You have imported %s products in %s categories.', 'big-cartel-product-importer' ),
+				esc_html__( 'You have imported %s of %s products in %s categories.', 'big-cartel-product-importer' ),
 				'<strong>' . esc_html( $total_posts ) . '</strong>',
+				'<strong>' . $wdsbc->get_shop_count() . '</strong>',
 				'<strong>' . esc_html( $count_terms ) . '</strong>'
 			);
 		}
