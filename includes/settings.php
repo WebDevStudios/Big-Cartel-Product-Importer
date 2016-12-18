@@ -35,8 +35,33 @@ function register_admin_settings() {
 		'big-cartel-importer',
 		'big_cartel_importer_main_options'
 	);
+
+	add_settings_field(
+		'offset',
+		__( 'Product offset to start at: ', 'big-cartel-product-importer' ),
+		'wdsbc_settings_offset',
+		'big-cartel-importer',
+		'big_cartel_importer_main_options'
+	);
 }
 add_action( 'admin_init', 'register_admin_settings' );
+
+function wdsbc_settings_offset() {
+	?>
+	<div class="input-wrap" >
+		<div class="left" >
+			<label ><input name="big_cartel_importer_plugin_options[offset]" style="width:30%;" type="text" value="" /></label>
+		</div>
+		<div class='right'>
+			<?php
+			printf(
+				esc_html__( 'Use this offset where the import begins. Useful to prevent re-importing existing products, if desired.', 'big-cartel-product-importer' )
+			);
+			?>
+		</div>
+	</div>
+<?php
+}
 
 /**
  * Render our settings page main content.
