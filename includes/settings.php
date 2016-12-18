@@ -180,8 +180,10 @@ function wdsbc_process_settings_save() {
 		$wdsbc->set_bigcartel_results();
 	}
 
+	$offset = ( isset( $_POST['big_cartel_importer_plugin_options']['offset'] ) ) ? absint( isset( $_POST['big_cartel_importer_plugin_options']['offset'] ) ) : 0;
+
 	$wdsbc->add_terms();
-	$wdsbc->import_products();
+	$wdsbc->import_products( array( 'offset' => $offset ) );
 }
 add_action( 'admin_init', 'wdsbc_process_settings_save' );
 
