@@ -18,7 +18,6 @@ class wdsBC_Importer extends WP_Background_Process {
 	}
 
 	protected function task( $item ) {
-error_log('start thing');
 		$product_name = $product_description = $product_id = $product_price = $product_link = $product_image = '';
 
 		// Get the post status.
@@ -109,14 +108,11 @@ error_log('start thing');
 				set_post_thumbnail( $post_id, $thumbnail_id );
 			}
 		}
-		error_log( 'thing' );
 		return false;
 	}
 
 	protected function complete() {
 		parent::complete();
-
-		error_log('what?');
 	}
 
 }
