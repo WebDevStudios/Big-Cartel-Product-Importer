@@ -16,6 +16,9 @@ function wdsbc_load_importer() {
 	load_plugin_textdomain( 'big-cartel-product-importer' );
 
 	require_once $plugin_dir_path . '/classes/class-wdsbc-import.php';
+	require_once $plugin_dir_path . '/classes/wp-background-processing/wp-async-request.php';
+	require_once $plugin_dir_path . '/classes/wp-background-processing/wp-background-process.php';
+	require_once $plugin_dir_path . '/classes/class-wdsbc-importer.php';
 	require_once $plugin_dir_path . '/includes/content-types.php';
 	require_once $plugin_dir_path . '/includes/metaboxes.php';
 	require_once $plugin_dir_path . '/includes/settings.php';
