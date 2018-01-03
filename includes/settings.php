@@ -173,7 +173,14 @@ function wdsbc_process_settings_save() {
 	) {
 		$saved_store = sanitize_text_field( $_POST['big_cartel_importer_plugin_options']['store_name'] );
 	}
-	$wdsbc = new WDS_BC_Importer();
+
+	$wdsbc = new WDS_BC_Importer(
+		array(
+			'importer' => new wdsBC_Importer(
+				array( 'store_name' => $saved_store )
+			)
+		)
+	);
 	if ( ( ! $wdsbc->has_data() ) || ( $saved_store !== $wdsbc->store_name ) ) {
 		// Most likely to get here on initial save or store change.
 		$wdsbc->store_name = $saved_store;
@@ -183,7 +190,7 @@ function wdsbc_process_settings_save() {
 	$offset = ( isset( $_POST['big_cartel_importer_plugin_options']['offset'] ) ) ? absint( isset( $_POST['big_cartel_importer_plugin_options']['offset'] ) ) : 0;
 
 	$wdsbc->add_terms();
-	$wdsbc->import_products( array( 'offset' => $offset ) );
+	$wdsbc->import_products();
 }
 add_action( 'admin_init', 'wdsbc_process_settings_save' );
 
