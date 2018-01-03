@@ -1,6 +1,6 @@
 <?php
 
-function wdsbc_ge_metabox_config() {
+function wdsbc_get_metabox_config() {
 	return array(
 		'id'       => 'big-cartel-metabox',
 		'title'    => esc_html__( 'Product Information', 'big-cartel-product-importer' ),
@@ -37,7 +37,7 @@ function wdsbc_ge_metabox_config() {
  * Add the meta box.
  */
 function wdsbc_add_meta_box() {
-	$metabox_settings = wdsbc_ge_metabox_config();
+	$metabox_settings = wdsbc_get_metabox_config();
 	add_meta_box(
 		$metabox_settings['id'],
 		$metabox_settings['title'],
@@ -54,7 +54,7 @@ function wdsbc_metabox_fields() {
 
 	wp_nonce_field( 'big_cartel_importer_nonce', 'big-cartel-importer' );
 
-	$metabox_settings = wdsbc_ge_metabox_config();
+	$metabox_settings = wdsbc_get_metabox_config();
 	// Display it all!
 	echo '<table class="form-table">';
 	$row_template = '<tr><th style="width:20%%"><label for="%s">%s</label></th><td><input type="text" name="%s" id="%s" value="%s" size="30" style="width:97%%" /><br />%s</td></tr>';
@@ -92,7 +92,7 @@ function wdsbc_save_post( $post_id ) {
 		return;
 	}
 
-	$metabox_settings = wdsbc_ge_metabox_config();
+	$metabox_settings = wdsbc_get_metabox_config();
 
 	foreach ( $metabox_settings['fields'] as $field ) {
 		$old = get_post_meta( $post_id, $field['id'], true );
